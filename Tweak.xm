@@ -1,10 +1,20 @@
 #define log(z) NSLog(@"[KeyTransition] %@", z)
 
+typedef enum {
+	KTAnimationFade,
+	KTAnimationSwapUp,
+	KTAnimationSwapDown
+} KTAnimation;
+
 static BOOL areDirectionsSwapped = NO;
+static KTAnimation selectedAnimtion = KTAnimationFade;
+
+@interface UIKeyboardInputMode : NSObject
+@end
 
 @interface UIKeyboardImpl : UIView
-@end
-@interface UIKeyboardInputMode : NSObject
+// Custom methods I need to call myself
+- (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode;
 @end
 
 @interface UIKeyboardInputModeController : NSObject
@@ -43,15 +53,32 @@ static BOOL areDirectionsSwapped = NO;
 		log(@"Next keyboard");
 		if(index == [inputModeController.activeInputModes count] - 1) index = -1;
 		index++;
-		log(@(index));
-		[inputModeController setCurrentInputMode:inputModeController.activeInputModes[index]];
+		[self animateThatShtuff:inputModeController.activeInputModes[index]];
 	}else {
 		// Previous keyboard
 		log(@"Previous keyboard");
 		if(index == 0) index = [inputModeController.activeInputModes count];
 		index--;
-		log(@(index));
-		[inputModeController setCurrentInputMode:inputModeController.activeInputModes[index]];
+		[self animateThatShtuff:inputModeController.activeInputModes[index]];
+	}
+}
+
+%new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode {
+	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
+	switch(selectedAnimtion) {
+		case KTAnimationFade:
+			[UIView animateWithDuration:0.2 animations:^{
+				self.alpha = 0;
+			} completion:^(BOOL){
+				[inputModeController setCurrentInputMode:newInputMode];
+				[UIView animateWithDuration:0.2 animations:^{
+					self.alpha = 1;
+				}];
+			}];
+			break;
+		default:
+			[inputModeController setCurrentInputMode:newInputMode];
+			break;
 	}
 }
 
