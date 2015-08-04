@@ -1,20 +1,26 @@
 #define log(z) NSLog(@"[KeyTransition] %@", z)
 
-typedef enum {
-	KTAnimationFade,
-	KTAnimationSwapUp,
-	KTAnimationSwapDown
-} KTAnimation;
+// Animation enums
+enum {
+	KTAnimationFade = 0,
+	KTAnimationSlideVertical = 1,
+	KTAnimationSlideHorizontal = 2
+};
+typedef NSUInteger KTAnimation;
 
-static BOOL areDirectionsSwapped = NO;
+// Preference settings
+static BOOL isEnabled = YES, areDirectionsSwapped = NO;
 static KTAnimation selectedAnimtion = KTAnimationFade;
+
+// Interfaces
 
 @interface UIKeyboardInputMode : NSObject
 @end
 
 @interface UIKeyboardImpl : UIView
 // Custom methods I need to call myself
-- (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode;
+- (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isGoingUp:(BOOL)isGoingUp;
+- (UIImage *)imageWithView:(UIView *)view;
 @end
 
 @interface UIKeyboardInputModeController : NSObject
@@ -30,6 +36,7 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 // I guess it already has a delayed init method for me :D
 - (void)delayedInit {
 	%orig;
+	if(!isEnabled) return;
 	// Create swipe gesture recognizers
 	UISwipeGestureRecognizer* swipeKeyGestureUp = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(transitionThoseKeyboards:)];
 	swipeKeyGestureUp.direction = (UISwipeGestureRecognizerDirectionUp);
@@ -42,8 +49,22 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 	[swipeKeyGestureDown release];
 }
 
+// Get image from UIView
+%new - (UIImage *)imageWithView:(UIView *)view {
+    UIGraphicsBeginImageContextWithOptions(view.bounds.size, view.opaque, [[UIScreen mainScreen] scale]); 
+    [view.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage* img = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    return img;
+}
+
 // Target action for swipe gesture recognizer
 %new - (void)transitionThoseKeyboards:(UISwipeGestureRecognizer *)swipeGesture {
+	if(!isEnabled) {
+		[self removeGestureRecognizer:swipeGesture];
+		[swipeGesture release];
+		return;
+	}
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	int index = [inputModeController.activeInputModes indexOfObject:inputModeController.currentInputMode];
 	log(@(index));
@@ -53,17 +74,17 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 		log(@"Next keyboard");
 		if(index == [inputModeController.activeInputModes count] - 1) index = -1;
 		index++;
-		[self animateThatShtuff:inputModeController.activeInputModes[index]];
+		[self animateThatShtuff:inputModeController.activeInputModes[index] isGoingUp:YES];
 	}else {
 		// Previous keyboard
 		log(@"Previous keyboard");
 		if(index == 0) index = [inputModeController.activeInputModes count];
 		index--;
-		[self animateThatShtuff:inputModeController.activeInputModes[index]];
+		[self animateThatShtuff:inputModeController.activeInputModes[index] isGoingUp:NO];
 	}
 }
 
-%new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode {
+%new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isGoingUp:(BOOL)isGoingUp {
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	switch(selectedAnimtion) {
 		case KTAnimationFade:
@@ -76,6 +97,30 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 				}];
 			}];
 			break;
+		case KTAnimationSlideVertical: {
+			UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
+			[self addSubview:currentKeyboardView];
+			[inputModeController setCurrentInputMode:newInputMode];
+			[UIView animateWithDuration:0.6 animations:^{
+				CGRect newFrame = currentKeyboardView.frame;
+				newFrame.origin.y = (isGoingUp ? (newFrame.size.height * 2) : -newFrame.size.height);
+				currentKeyboardView.frame = newFrame;
+				currentKeyboardView.alpha = 0;
+			}];
+			break;
+		}
+		case KTAnimationSlideHorizontal: {
+			UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
+			[self addSubview:currentKeyboardView];
+			[inputModeController setCurrentInputMode:newInputMode];
+			[UIView animateWithDuration:0.6 animations:^{
+				CGRect newFrame = currentKeyboardView.frame;
+				newFrame.origin.x = (isGoingUp ? -newFrame.size.width : (newFrame.size.width * 2));
+				currentKeyboardView.frame = newFrame;
+				currentKeyboardView.alpha = 0;
+			}];
+			break;
+		}
 		default:
 			[inputModeController setCurrentInputMode:newInputMode];
 			break;
@@ -83,3 +128,20 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 }
 
 %end
+
+static void reloadPrefs() {
+	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
+	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
+	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
+	selectedAnimtion = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
+}
+
+%ctor {
+
+	reloadPrefs();
+
+	CFNotificationCenterAddObserver(CFNotificationCenterGetDarwinNotifyCenter(), NULL,
+	        (CFNotificationCallback)reloadPrefs,
+	        CFSTR("com.sassoty.keytransition.prefschanged"), NULL, CFNotificationSuspensionBehaviorDeliverImmediately);
+
+}
