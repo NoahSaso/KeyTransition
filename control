@@ -4,6 +4,6 @@ Depends: mobilesubstrate
 Version: 0.0.1
 Architecture: iphoneos-arm
 Description: Change keyboards by swiping!
-Maintainer: Sassoty & AOkhtenberg <sassoty@gmail.com>
-Author: Sassoty <sassoty@gmail.com>
+Maintainer: Sassoty <sassoty@gmail.com>
+Author: Sassoty & AOkhtenberg <sassoty@gmail.com>
 Section: Tweaks
