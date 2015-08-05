@@ -6,7 +6,12 @@
 @interface HeaderCell : PSTableCell {
     UILabel *heading;
     UILabel *subtitle;
+    CGFloat goodHeight;
 }
+@end
+
+@interface UIImage (Private)
++ (UIImage *)imageNamed:(NSString *)name inBundle:(NSBundle *)bundle;
 @end
 
 @implementation HeaderCell
@@ -20,10 +25,22 @@
 - (id)initWithSpecifier:(PSSpecifier *)specifier {
     self = [super initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"headerCell" specifier:specifier];
     if (self) {
+
         self.backgroundColor = [UIColor clearColor];
-        
-        int width = [[UIScreen mainScreen] bounds].size.width;
-        
+
+        UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Banner" inBundle:[NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]]];
+        headerImage.contentMode = UIViewContentModeScaleAspectFit;
+        // Resize banner to fit screen
+        CGRect newFrame = headerImage.frame;
+        CGFloat ratio = [[UIScreen mainScreen] bounds].size.width / newFrame.size.width;
+        newFrame.size.width = [[UIScreen mainScreen] bounds].size.width;
+        newFrame.size.height *= ratio;
+        headerImage.frame = newFrame;
+        [self.contentView addSubview:headerImage];
+
+        goodHeight = newFrame.size.height;
+
+        /*
         CGRect frame = CGRectMake(0, 0, width, 60);
         CGRect subFrame = CGRectMake(0, 35, width, 60);
         
@@ -45,13 +62,15 @@
         
         [self.contentView addSubview:heading];
         [self.contentView addSubview:subtitle];
+        */
+
     }
     
     return self;
 }
 
 - (CGFloat)preferredHeightForWidth:(double)arg1 inTableView:(id)arg2 {
-    return 90.0;
+    return goodHeight;
 }
 
 @end

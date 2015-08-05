@@ -1,18 +1,21 @@
 #define log(z) NSLog(@"[KeyTransition] %@", z)
 
+#include <stdlib.h>
+
 // Animation enums
 enum {
-	KTAnimationFade = 0,
-	KTAnimationSlideVertical = 1,
-	KTAnimationSlideHorizontal = 2,
-	KTAnimationZoomIn = 3,
-	KTAnimationZoomOut = 4
+	KTAnimationFade,
+	KTAnimationSlideVertical,
+	KTAnimationSlideHorizontal,
+	KTAnimationShrink,
+	KTAnimationGrow,
+	KTAnimationCount
 };
 typedef NSUInteger KTAnimation;
 
 // Preference settings
 static BOOL isEnabled = YES, areDirectionsSwapped = NO;
-static KTAnimation selectedAnimtion = KTAnimationFade;
+static KTAnimation selectedAnimation = KTAnimationFade;
 
 // Interfaces
 
@@ -86,15 +89,20 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 }
 
 %new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isGoingUp:(BOOL)isGoingUp {
+	if(!isEnabled) return;
+	// Variables most or all animations need
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
-	switch(selectedAnimtion) {
+	// Check if needs random choice
+	int currentAnimation = selectedAnimation;
+	if(currentAnimation == 673) currentAnimation = arc4random_uniform(KTAnimationCount);
+	switch(currentAnimation) {
 		case KTAnimationFade:
-			[UIView animateWithDuration:0.2 animations:^{
+			[UIView animateWithDuration:0.35 animations:^{
 				self.alpha = 0;
 			} completion:^(BOOL){
 				[inputModeController setCurrentInputMode:newInputMode];
-				[UIView animateWithDuration:0.2 animations:^{
+				[UIView animateWithDuration:0.35 animations:^{
 					self.alpha = 1;
 				}];
 			}];
@@ -102,7 +110,7 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 		case KTAnimationSlideVertical: {
 			[self addSubview:currentKeyboardView];
 			[inputModeController setCurrentInputMode:newInputMode];
-			[UIView animateWithDuration:0.6 animations:^{
+			[UIView animateWithDuration:0.75 animations:^{
 				CGRect newFrame = currentKeyboardView.frame;
 				newFrame.origin.y = (isGoingUp ? (newFrame.size.height * 2) : -newFrame.size.height);
 				currentKeyboardView.frame = newFrame;
@@ -115,7 +123,7 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 		case KTAnimationSlideHorizontal: {
 			[self addSubview:currentKeyboardView];
 			[inputModeController setCurrentInputMode:newInputMode];
-			[UIView animateWithDuration:0.6 animations:^{
+			[UIView animateWithDuration:0.75 animations:^{
 				CGRect newFrame = currentKeyboardView.frame;
 				newFrame.origin.x = (isGoingUp ? -newFrame.size.width : (newFrame.size.width * 2));
 				currentKeyboardView.frame = newFrame;
@@ -125,12 +133,26 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 			}];
 			break;
 		}
-		case KTAnimationZoomOut: {
+		case KTAnimationShrink: {
 			[self addSubview:currentKeyboardView];
 			[inputModeController setCurrentInputMode:newInputMode];
 			CGRect newFrame = CGRectMake((self.frame.size.width / 2) + 1, (self.frame.size.height / 2) + 1, 2, 2);
-			[UIView animateWithDuration:0.9 animations:^{
+			[UIView animateWithDuration:0.75 animations:^{
 				currentKeyboardView.frame = newFrame;
+			} completion:^(BOOL){
+				[currentKeyboardView removeFromSuperview];
+			}];
+			break;
+		}
+		case KTAnimationGrow: {
+			[self addSubview:currentKeyboardView];
+			CGPoint center = self.center;
+			[inputModeController setCurrentInputMode:newInputMode];
+			CGRect newFrame = CGRectMake(0, 0, currentKeyboardView.frame.size.width * 2, currentKeyboardView.frame.size.height * 2);
+			[UIView animateWithDuration:0.75 animations:^{
+				currentKeyboardView.frame = newFrame;
+				currentKeyboardView.center = center;
+				currentKeyboardView.alpha = 0;
 			} completion:^(BOOL){
 				[currentKeyboardView removeFromSuperview];
 			}];
@@ -145,10 +167,11 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 %end
 
 static void reloadPrefs() {
+	log(@"Loading prefs");
 	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
 	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
 	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
-	selectedAnimtion = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
+	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
 }
 
 %ctor {
