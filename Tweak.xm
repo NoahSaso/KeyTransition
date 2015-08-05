@@ -10,7 +10,8 @@ enum {
 	KTAnimationShrink,
 	KTAnimationGrow,
 	KTAnimationShrinkAndGrow,
-	KTAnimationCount
+	KTAnimationCount,
+	KTAnimationRandom = 673
 };
 typedef NSUInteger KTAnimation;
 
@@ -99,9 +100,9 @@ static void reloadPrefs();
 	UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
 	int currentAnimation = selectedAnimation;
 	// Choose random
-	if(currentAnimation == 673) currentAnimation = arc4random_uniform(KTAnimationCount);
+	if(currentAnimation == KTAnimationRandom) currentAnimation = arc4random_uniform(KTAnimationCount);
 	// Choose shrink on next keyboard and grow on previous, kind of like a stack of cards
-	if(currentAnimation == 5) currentAnimation = (isNext ? 3 : 4);
+	if(currentAnimation == KTAnimationShrinkAndGrow) currentAnimation = (isNext ? KTAnimationShrink : KTAnimationGrow);
 	switch(currentAnimation) {
 		case KTAnimationFade:
 			[UIView animateWithDuration:0.35 animations:^{
@@ -114,26 +115,34 @@ static void reloadPrefs();
 			}];
 			break;
 		case KTAnimationSlideVertical: {
-			[self addSubview:currentKeyboardView];
+			[self.superview addSubview:currentKeyboardView];
+			self.alpha = 0;
 			[inputModeController setCurrentInputMode:newInputMode];
+			self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height, self.frame.size.width, self.frame.size.height);
+			CGRect newFrame = currentKeyboardView.frame;
+			newFrame.origin.y = (isNext ? (newFrame.size.height * 2) : -newFrame.size.height);
 			[UIView animateWithDuration:0.75 animations:^{
-				CGRect newFrame = currentKeyboardView.frame;
-				newFrame.origin.y = (isNext ? (newFrame.size.height * 2) : -newFrame.size.height);
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
+				self.alpha = 1;
+				self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y - self.frame.size.height, self.frame.size.width, self.frame.size.height);
 			} completion:^(BOOL){
 				[currentKeyboardView removeFromSuperview];
 			}];
 			break;
 		}
 		case KTAnimationSlideHorizontal: {
-			[self addSubview:currentKeyboardView];
+			[self.superview addSubview:currentKeyboardView];
+			self.alpha = 0;
 			[inputModeController setCurrentInputMode:newInputMode];
+			self.frame = CGRectMake(self.frame.origin.x + (isNext ? self.frame.size.width : -self.frame.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+			CGRect newFrame = currentKeyboardView.frame;
+			newFrame.origin.x = (isNext ? -newFrame.size.width : newFrame.size.width);
 			[UIView animateWithDuration:0.75 animations:^{
-				CGRect newFrame = currentKeyboardView.frame;
-				newFrame.origin.x = (isNext ? -newFrame.size.width : (newFrame.size.width * 2));
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
+				self.alpha = 1;
+				self.frame = CGRectMake(self.frame.origin.x + (isNext ? -self.frame.size.width : self.frame.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
 			} completion:^(BOOL){
 				[currentKeyboardView removeFromSuperview];
 			}];
