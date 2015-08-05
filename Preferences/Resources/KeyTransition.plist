@@ -75,8 +75,26 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<!--<key>footerText</key>
-			<string>For changes to take effect within an app, you must kill it first.</string>-->
+			<key>footerText</key>
+			<string>This makes the up swipe show the previous keyboard and the down swipe show the next keyboard.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<false/>
+			<key>defaults</key>
+			<string>com.sassoty.keytransition</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.keytransition.prefschanged</string>
+			<key>key</key>
+			<string>VibrateChange</string>
+			<key>label</key>
+			<string>Vibrate on Change</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 		</dict>
 		<dict>
 			<key>detail</key>

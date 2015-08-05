@@ -1,6 +1,10 @@
 #define log(z) NSLog(@"[KeyTransition] %@", z)
 
+#import <AudioToolbox/AudioServices.h>
 #include <stdlib.h>
+
+// Vibrate method
+extern "C" void AudioServicesPlaySystemSoundWithVibration(SystemSoundID inSystemSoundID, id arg, NSDictionary* vibratePattern);
 
 // Animation enums
 enum {
@@ -16,7 +20,7 @@ enum {
 typedef NSUInteger KTAnimation;
 
 // Preference settings
-static BOOL isEnabled = YES, areDirectionsSwapped = NO, hideGlobeKey = NO;
+static BOOL isEnabled = YES, areDirectionsSwapped = NO, hideGlobeKey = NO, vibrateChange = NO;
 static KTAnimation selectedAnimation = KTAnimationFade;
 
 // Interfaces
@@ -39,6 +43,23 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 @end
 
 static void reloadPrefs();
+
+// Vibrate on change
+
+%hook UIKeyboardInputModeController
+
+- (void)setCurrentInputMode:(UIKeyboardInputMode *)inputMode {
+	%orig;
+	if(!isEnabled || !vibrateChange) return;
+	// Vibrate for 100 ms
+	NSArray* arr = [NSArray arrayWithObjects:@(YES), @(100), nil];
+	NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObject:arr forKey:@"VibePattern"];
+	dict[@"Intensity"] = @(1);
+	// Play vibration
+	AudioServicesPlaySystemSoundWithVibration(kSystemSoundID_Vibrate, nil, dict);
+}
+
+%end
 
 %hook UIKeyboardImpl
 
@@ -206,13 +227,13 @@ static void reloadPrefs();
 // Hide globe key
 
 
-
 static void reloadPrefs() {
 	log(@"Loading prefs");
 	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
 	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
-	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
 	hideGlobeKey = !prefs[@"HideGlobeKey"] ? NO : [prefs[@"HideGlobeKey"] boolValue];
+	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
+	vibrateChange = !prefs[@"VibrateChange"] ? NO : [prefs[@"VibrateChange"] boolValue];
 	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
 }
 
