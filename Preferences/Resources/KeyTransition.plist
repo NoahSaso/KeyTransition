@@ -55,6 +55,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>For changes to take effect within an app, you must kill it first.</string>
 		</dict>
 		<dict>
 			<key>detail</key>
@@ -79,6 +81,7 @@
 				<string>Horizontal Slide</string>
 				<string>Shrink</string>
 				<string>Grow</string>
+				<string>Card Stack (Shrink &amp; Grow)</string>
 			</array>
 			<key>validValues</key>
 			<array>
@@ -88,6 +91,7 @@
 				<integer>2</integer>
 				<integer>3</integer>
 				<integer>4</integer>
+				<integer>5</integer>
 			</array>
 		</dict>
 		<dict>

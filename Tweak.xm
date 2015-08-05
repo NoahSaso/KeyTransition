@@ -9,6 +9,7 @@ enum {
 	KTAnimationSlideHorizontal,
 	KTAnimationShrink,
 	KTAnimationGrow,
+	KTAnimationShrinkAndGrow,
 	KTAnimationCount
 };
 typedef NSUInteger KTAnimation;
@@ -24,7 +25,7 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 
 @interface UIKeyboardImpl : UIView
 // Custom methods I need to call myself
-- (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isGoingUp:(BOOL)isGoingUp;
+- (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isNext:(BOOL)isNext;
 - (UIImage *)imageWithView:(UIView *)view;
 @end
 
@@ -35,6 +36,8 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 - (id)activeInputModes;
 - (void)setCurrentInputMode:(UIKeyboardInputMode *)inputMode;
 @end
+
+static void reloadPrefs();
 
 %hook UIKeyboardImpl
 
@@ -65,6 +68,7 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 
 // Target action for swipe gesture recognizer
 %new - (void)transitionThoseKeyboards:(UISwipeGestureRecognizer *)swipeGesture {
+	reloadPrefs();
 	if(!isEnabled) {
 		[self removeGestureRecognizer:swipeGesture];
 		[swipeGesture release];
@@ -78,24 +82,26 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 		log(@"Next keyboard");
 		if(index == [inputModeController.activeInputModes count] - 1) index = -1;
 		index++;
-		[self animateThatShtuff:inputModeController.activeInputModes[index] isGoingUp:YES];
+		[self animateThatShtuff:inputModeController.activeInputModes[index] isNext:YES];
 	}else {
 		// Previous keyboard
 		log(@"Previous keyboard");
 		if(index == 0) index = [inputModeController.activeInputModes count];
 		index--;
-		[self animateThatShtuff:inputModeController.activeInputModes[index] isGoingUp:NO];
+		[self animateThatShtuff:inputModeController.activeInputModes[index] isNext:NO];
 	}
 }
 
-%new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isGoingUp:(BOOL)isGoingUp {
+%new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isNext:(BOOL)isNext {
 	if(!isEnabled) return;
 	// Variables most or all animations need
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
-	// Check if needs random choice
 	int currentAnimation = selectedAnimation;
+	// Choose random
 	if(currentAnimation == 673) currentAnimation = arc4random_uniform(KTAnimationCount);
+	// Choose shrink on next keyboard and grow on previous, kind of like a stack of cards
+	if(currentAnimation == 5) currentAnimation = (isNext ? 3 : 4);
 	switch(currentAnimation) {
 		case KTAnimationFade:
 			[UIView animateWithDuration:0.35 animations:^{
@@ -112,7 +118,7 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 			[inputModeController setCurrentInputMode:newInputMode];
 			[UIView animateWithDuration:0.75 animations:^{
 				CGRect newFrame = currentKeyboardView.frame;
-				newFrame.origin.y = (isGoingUp ? (newFrame.size.height * 2) : -newFrame.size.height);
+				newFrame.origin.y = (isNext ? (newFrame.size.height * 2) : -newFrame.size.height);
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
 			} completion:^(BOOL){
@@ -125,7 +131,7 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 			[inputModeController setCurrentInputMode:newInputMode];
 			[UIView animateWithDuration:0.75 animations:^{
 				CGRect newFrame = currentKeyboardView.frame;
-				newFrame.origin.x = (isGoingUp ? -newFrame.size.width : (newFrame.size.width * 2));
+				newFrame.origin.x = (isNext ? -newFrame.size.width : (newFrame.size.width * 2));
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
 			} completion:^(BOOL){
@@ -168,6 +174,7 @@ static KTAnimation selectedAnimation = KTAnimationFade;
 
 static void reloadPrefs() {
 	log(@"Loading prefs");
+	log(@(KTAnimationCount));
 	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
 	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
 	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
