@@ -1,6 +1,8 @@
 #import <Preferences/Preferences.h>
 #import <Twitter/Twitter.h>
 
+#define KTBundle [NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]
+
 #define KTColor [UIColor colorWithRed:.17 green:.47 blue:.83 alpha:1]
 
 @interface UIImage (Private)
@@ -28,9 +30,9 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"KeyTransition" inBundle:[NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]]];
+	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"KeyTransition" inBundle:KTBundle]];
 	self.navigationItem.titleView.alpha = 0;
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction target:self action:@selector(tweet)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Twitter" inBundle:KTBundle] style:UIBarButtonItemStylePlain target:self action:@selector(tweet)];
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 	    [UIView animateWithDuration:0.55 animations:^{
 	    	self.navigationItem.titleView.alpha = 1;
