@@ -4,7 +4,9 @@
 enum {
 	KTAnimationFade = 0,
 	KTAnimationSlideVertical = 1,
-	KTAnimationSlideHorizontal = 2
+	KTAnimationSlideHorizontal = 2,
+	KTAnimationZoomIn = 3,
+	KTAnimationZoomOut = 4
 };
 typedef NSUInteger KTAnimation;
 
@@ -67,7 +69,6 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 	}
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	int index = [inputModeController.activeInputModes indexOfObject:inputModeController.currentInputMode];
-	log(@(index));
 	// Check if swiped up or down
 	if(swipeGesture.direction == (areDirectionsSwapped ? UISwipeGestureRecognizerDirectionDown : UISwipeGestureRecognizerDirectionUp)) {
 		// Next keyboard
@@ -86,6 +87,7 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 
 %new - (void)animateThatShtuff:(UIKeyboardInputMode *)newInputMode isGoingUp:(BOOL)isGoingUp {
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
+	UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
 	switch(selectedAnimtion) {
 		case KTAnimationFade:
 			[UIView animateWithDuration:0.2 animations:^{
@@ -98,7 +100,6 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 			}];
 			break;
 		case KTAnimationSlideVertical: {
-			UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
 			[self addSubview:currentKeyboardView];
 			[inputModeController setCurrentInputMode:newInputMode];
 			[UIView animateWithDuration:0.6 animations:^{
@@ -106,11 +107,12 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 				newFrame.origin.y = (isGoingUp ? (newFrame.size.height * 2) : -newFrame.size.height);
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
+			} completion:^(BOOL){
+				[currentKeyboardView removeFromSuperview];
 			}];
 			break;
 		}
 		case KTAnimationSlideHorizontal: {
-			UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
 			[self addSubview:currentKeyboardView];
 			[inputModeController setCurrentInputMode:newInputMode];
 			[UIView animateWithDuration:0.6 animations:^{
@@ -118,6 +120,19 @@ static KTAnimation selectedAnimtion = KTAnimationFade;
 				newFrame.origin.x = (isGoingUp ? -newFrame.size.width : (newFrame.size.width * 2));
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
+			} completion:^(BOOL){
+				[currentKeyboardView removeFromSuperview];
+			}];
+			break;
+		}
+		case KTAnimationZoomOut: {
+			[self addSubview:currentKeyboardView];
+			[inputModeController setCurrentInputMode:newInputMode];
+			CGRect newFrame = CGRectMake((self.frame.size.width / 2) + 1, (self.frame.size.height / 2) + 1, 2, 2);
+			[UIView animateWithDuration:0.9 animations:^{
+				currentKeyboardView.frame = newFrame;
+			} completion:^(BOOL){
+				[currentKeyboardView removeFromSuperview];
 			}];
 			break;
 		}
