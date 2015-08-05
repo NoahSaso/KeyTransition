@@ -55,8 +55,8 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>footerText</key>
-			<string>For changes to take effect within an app, you must kill it first.</string>
+			<!--<key>footerText</key>
+			<string>For changes to take effect within an app, you must kill it first.</string>-->
 		</dict>
 		<dict>
 			<key>detail</key>
