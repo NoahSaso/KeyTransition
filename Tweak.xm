@@ -15,7 +15,7 @@ enum {
 typedef NSUInteger KTAnimation;
 
 // Preference settings
-static BOOL isEnabled = YES, areDirectionsSwapped = NO;
+static BOOL isEnabled = YES, areDirectionsSwapped = NO, hideGlobeKey = NO;
 static KTAnimation selectedAnimation = KTAnimationFade;
 
 // Interfaces
@@ -172,12 +172,16 @@ static void reloadPrefs();
 
 %end
 
+// Hide globe key
+
+
+
 static void reloadPrefs() {
 	log(@"Loading prefs");
-	log(@(KTAnimationCount));
 	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
 	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
 	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
+	hideGlobeKey = !prefs[@"HideGlobeKey"] ? NO : [prefs[@"HideGlobeKey"] boolValue];
 	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
 }
 
