@@ -21,6 +21,7 @@ typedef NSUInteger KTAnimation;
 
 // Preference settings
 static BOOL isEnabled = YES, areDirectionsSwapped = NO, hideGlobeKey = NO, vibrateChange = NO;
+static int vibrationLength = 100;
 static KTAnimation selectedAnimation = KTAnimationFade;
 
 // Interfaces
@@ -52,7 +53,7 @@ static void reloadPrefs();
 	%orig;
 	if(!isEnabled || !vibrateChange) return;
 	// Vibrate for 100 ms
-	NSArray* arr = [NSArray arrayWithObjects:@(YES), @(100), nil];
+	NSArray* arr = [NSArray arrayWithObjects:@(YES), @(vibrationLength), nil];
 	NSMutableDictionary* dict = [NSMutableDictionary dictionaryWithObject:arr forKey:@"VibePattern"];
 	dict[@"Intensity"] = @(1);
 	// Play vibration
@@ -234,6 +235,8 @@ static void reloadPrefs() {
 	hideGlobeKey = !prefs[@"HideGlobeKey"] ? NO : [prefs[@"HideGlobeKey"] boolValue];
 	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
 	vibrateChange = !prefs[@"VibrateChange"] ? NO : [prefs[@"VibrateChange"] boolValue];
+	vibrationLength = !prefs[@"VibrationLength"] ? 100 : [prefs[@"VibrationLength"] floatValue];
+	if(vibrationLength < 50) vibrationLength = 50;
 	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
 }
 

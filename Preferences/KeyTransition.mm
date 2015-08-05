@@ -1,4 +1,4 @@
-#import <Preferences/Preferences.h>
+#import <Preferences/PSListController.h>
 #import <Twitter/Twitter.h>
 
 #define KTBundle [NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]
@@ -17,7 +17,7 @@
 
 - (id)specifiers {
 	if(_specifiers == nil) {
-		_specifiers = [[self loadSpecifiersFromPlistName:@"KeyTransition" target:self] retain];
+		_specifiers = [self loadSpecifiersFromPlistName:@"KeyTransition" target:self];
 	}
 	[UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	[UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = KTColor;
@@ -51,7 +51,6 @@
 	}else {
 		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"KeyTransition" message:@"Please make sure you have Twitter accounts signed in on your device." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 		[alert show];
-		[alert release];
 	}
 }
 

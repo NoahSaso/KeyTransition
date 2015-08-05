@@ -4,10 +4,11 @@ GO_EASY_ON_ME = 1
 include theos/makefiles/common.mk
 
 BUNDLE_NAME = KeyTransition
-KeyTransition_FILES = KeyTransition.mm HeaderCell.mm
+KeyTransition_FILES = KeyTransition.mm HeaderCell.mm BetterPSSliderTableCell.mm
 KeyTransition_INSTALL_PATH = /Library/PreferenceBundles
 KeyTransition_FRAMEWORKS = UIKit Twitter
 KeyTransition_PRIVATE_FRAMEWORKS = Preferences
+ADDITIONAL_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/bundle.mk
 

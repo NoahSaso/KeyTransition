@@ -76,7 +76,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>This makes the up swipe show the previous keyboard and the down swipe show the next keyboard.</string>
+			<string>Vibrate when you swipe to change keyboards. You may select how long you want it to vibrate for (in milliseconds) with the slider above.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -91,6 +91,26 @@
 			<string>VibrateChange</string>
 			<key>label</key>
 			<string>Vibrate on Change</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>cellClass</key>
+			<string>BetterPSSliderTableCell</string>
+			<key>defaults</key>
+			<string>com.sassoty.keytransition</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.keytransition/preferencechanged</string>
+			<key>default</key>
+			<integer>100</integer>
+			<key>min</key>
+			<integer>50</integer>
+			<key>max</key>
+			<integer>1000</integer>
+			<key>showValue</key>
+			<true/>
+			<key>key</key>
+			<string>VibrationLength</string>
 		</dict>
 		<dict>
 			<key>cell</key>
