@@ -105,9 +105,11 @@ static void reloadPrefs();
 	if(currentAnimation == KTAnimationShrinkAndGrow) currentAnimation = (isNext ? KTAnimationShrink : KTAnimationGrow);
 	switch(currentAnimation) {
 		case KTAnimationFade:
+			// Activate animations to hide current keyboard, swap it, then show new keyboard
 			[UIView animateWithDuration:0.35 animations:^{
 				self.alpha = 0;
 			} completion:^(BOOL){
+				// Change keyboard
 				[inputModeController setCurrentInputMode:newInputMode];
 				[UIView animateWithDuration:0.35 animations:^{
 					self.alpha = 1;
@@ -115,12 +117,17 @@ static void reloadPrefs();
 			}];
 			break;
 		case KTAnimationSlideVertical: {
+			// Add an image of the current keyboard to the superview of the general keyboard class and hide the new one
 			[self.superview addSubview:currentKeyboardView];
 			self.alpha = 0;
+			// Change keyboard
 			[inputModeController setCurrentInputMode:newInputMode];
+			// Put the new keyboard off screen
 			self.frame = CGRectMake(self.frame.origin.x, self.frame.origin.y + self.frame.size.height, self.frame.size.width, self.frame.size.height);
+			// Put the old keyboard up/down according to if it's the next or previous swipe
 			CGRect newFrame = currentKeyboardView.frame;
 			newFrame.origin.y = (isNext ? (newFrame.size.height * 2) : -newFrame.size.height);
+			// Activate animations
 			[UIView animateWithDuration:0.75 animations:^{
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
@@ -132,12 +139,17 @@ static void reloadPrefs();
 			break;
 		}
 		case KTAnimationSlideHorizontal: {
+			// Add an image of the current keyboard to the superview of the general keyboard class and hide the new one
 			[self.superview addSubview:currentKeyboardView];
 			self.alpha = 0;
+			// Change keyboard
 			[inputModeController setCurrentInputMode:newInputMode];
+			// Put the new keyboard off screen
 			self.frame = CGRectMake(self.frame.origin.x + (isNext ? self.frame.size.width : -self.frame.size.width), self.frame.origin.y, self.frame.size.width, self.frame.size.height);
+			// Put the old keyboard left/right according to if it's the next or previous swipe
 			CGRect newFrame = currentKeyboardView.frame;
 			newFrame.origin.x = (isNext ? -newFrame.size.width : newFrame.size.width);
+			// Activate animations
 			[UIView animateWithDuration:0.75 animations:^{
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
@@ -149,9 +161,13 @@ static void reloadPrefs();
 			break;
 		}
 		case KTAnimationShrink: {
+			// Add an image of the current keyboard to the view
 			[self addSubview:currentKeyboardView];
+			// Change keyboard
 			[inputModeController setCurrentInputMode:newInputMode];
+			// Shrink the current keyboard
 			CGRect newFrame = CGRectMake((self.frame.size.width / 2) + 1, (self.frame.size.height / 2) + 1, 2, 2);
+			// Activate animations
 			[UIView animateWithDuration:0.75 animations:^{
 				currentKeyboardView.frame = newFrame;
 			} completion:^(BOOL){
@@ -160,10 +176,15 @@ static void reloadPrefs();
 			break;
 		}
 		case KTAnimationGrow: {
+			// Add an image of the current keyboard to the view
 			[self addSubview:currentKeyboardView];
+			// Get old center to keep new one in place
 			CGPoint center = self.center;
+			// Change keyboard
 			[inputModeController setCurrentInputMode:newInputMode];
+			// Grow the current keyboard
 			CGRect newFrame = CGRectMake(0, 0, currentKeyboardView.frame.size.width * 2, currentKeyboardView.frame.size.height * 2);
+			// Activate animations
 			[UIView animateWithDuration:0.75 animations:^{
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.center = center;
@@ -174,6 +195,7 @@ static void reloadPrefs();
 			break;
 		}
 		default:
+			// Switch like normal because of some failure with the preferences idk this should never happen unless the user manually changes the preferences file
 			[inputModeController setCurrentInputMode:newInputMode];
 			break;
 	}
