@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>items</key>
+	<array>
+		<dict>
+			<key>cellClass</key>
+			<string>KTMakerTableCell</string>
+			<key>height</key>
+			<string>100</string>
+			<key>name</key>
+			<string>Noah Saso</string>
+			<key>twitter</key>
+			<string>Sassoty</string>
+			<key>role</key>
+			<string>Software Developer</string>
+			<key>website</key>
+			<string>http://sassoty.com</string>
+			<key>github</key>
+			<string>http://github.com/Sassoty</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cellClass</key>
+			<string>KTMakerTableCell</string>
+			<key>height</key>
+			<string>100</string>
+			<key>name</key>
+			<string>Ariel Okhtenberg</string>
+			<key>twitter</key>
+			<string>AOkhtenberg</string>
+			<key>role</key>
+			<string>UI/UX Designer</string>
+			<key>website</key>
+			<string>http://aokhtenberg.github.io</string>
+			<key>github</key>
+			<string>http://github.com/AOkhtenberg</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>footerText</key>
+			<string>KeyTransition © Noah Saso &amp; Ariel Okhtenberg 2015</string>
+		</dict>
+	</array>
+	<key>title</key>
+	<string>The Makers</string>
+</dict>
+</plist>

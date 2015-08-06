@@ -1,13 +1,6 @@
 #import <Preferences/PSListController.h>
 #import <Twitter/Twitter.h>
-
-#define KTBundle [NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]
-
-#define KTColor [UIColor colorWithRed:.17 green:.47 blue:.83 alpha:1]
-
-@interface UIImage (Private)
-+ (UIImage *)imageNamed:(NSString *)named inBundle:(NSBundle *)bundle;
-@end
+#import "global.h"
 
 @interface KeyTransitionListController: PSListController {
 }
@@ -41,10 +34,8 @@
 	// Color stuff
 	[UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	[UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = KTColor;
-	[UISegmentedControl appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	[UINavigationBar appearanceWhenContainedIn:self.class, nil].tintColor = [UIColor whiteColor];
 	[UINavigationBar appearanceWhenContainedIn:self.class, nil].barTintColor = KTColor;
-	[UISlider appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	return _specifiers;
 }
 

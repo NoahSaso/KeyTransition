@@ -1,4 +1,4 @@
-#import <Preferences/Preferences.h>
+#import <Preferences/PSSliderTableCell.h>
 #import <UIKit/UIKit.h>
 
 @interface BetterPSSliderTableCell : PSSliderTableCell <UIAlertViewDelegate, UITextFieldDelegate> {
