@@ -76,7 +76,7 @@
 			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>detail</key>
-			<string>ExtraListController</string>
+			<string>KTExtrasListController</string>
 			<key>label</key>
 			<string>Extras</string>
 			<key>icon</key>

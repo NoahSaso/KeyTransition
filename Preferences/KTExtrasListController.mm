@@ -2,15 +2,15 @@
 #import <Twitter/Twitter.h>
 #import "global.h"
 
-@interface KTExtraListController: PSListController {
+@interface KTExtrasListController: PSListController {
 }
 @end
 
-@implementation KTExtraListController
+@implementation KTExtrasListController
 
 - (id)specifiers {
 	if(_specifiers == nil) {
-		_specifiers = [self loadSpecifiersFromPlistName:@"Extra" target:self];
+		_specifiers = [self loadSpecifiersFromPlistName:@"Extras" target:self];
 	}
 	// Color stuff
 	[UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
