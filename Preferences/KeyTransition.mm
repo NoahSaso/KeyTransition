@@ -11,6 +11,7 @@
 
 @interface KeyTransitionListController: PSListController {
 }
+- (UIViewController *)rootController;
 @end
 
 @implementation KeyTransitionListController
@@ -19,6 +20,25 @@
 	if(_specifiers == nil) {
 		_specifiers = [self loadSpecifiersFromPlistName:@"KeyTransition" target:self];
 	}
+	// Get the banner image
+	UITableView* tableView = [self table];
+	UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Banner" inBundle:[NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]]];
+	// Resize header image
+	CGFloat paneWidth = [[UIScreen mainScreen] bounds].size.width;
+	if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		paneWidth = [self rootController].view.frame.size.width;
+	// Resize frame to fit
+	CGRect newFrame = headerImage.frame;
+	CGFloat ratio = paneWidth / newFrame.size.width;
+	newFrame.size.width = paneWidth;
+	newFrame.size.height *= ratio;
+	headerImage.frame = newFrame;
+	// Add header container
+	UIView* headerContainer = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, newFrame.size.height)];
+	headerContainer.backgroundColor = [UIColor clearColor];
+	[headerContainer addSubview:headerImage];
+	[tableView setTableHeaderView:headerContainer];
+	// Color stuff
 	[UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	[UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = KTColor;
 	[UISegmentedControl appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
