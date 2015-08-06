@@ -13,6 +13,11 @@
 	if(_specifiers == nil) {
 		_specifiers = [self loadSpecifiersFromPlistName:@"KeyTransition" target:self];
 	}
+	return _specifiers;
+}
+
+- (void)viewDidLoad {
+	[super viewDidLoad];
 	// Get the banner image
 	UITableView* tableView = [self table];
 	UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Banner" inBundle:[NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]]];
@@ -36,11 +41,7 @@
 	[UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = KTColor;
 	[UINavigationBar appearanceWhenContainedIn:self.class, nil].tintColor = [UIColor whiteColor];
 	[UINavigationBar appearanceWhenContainedIn:self.class, nil].barTintColor = KTColor;
-	return _specifiers;
-}
-
-- (void)viewDidLoad {
-	[super viewDidLoad];
+	// Title stuff
 	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"KeyTransition" inBundle:KTBundle]];
 	self.navigationItem.titleView.alpha = 0;
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Twitter" inBundle:KTBundle] style:UIBarButtonItemStylePlain target:self action:@selector(tweet)];
