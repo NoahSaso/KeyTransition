@@ -35,6 +35,48 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>detail</key>
+			<string>PSListItemsController</string>
+			<key>defaults</key>
+			<string>com.sassoty.keytransition</string>
+			<key>default</key>
+			<integer>0</integer>
+			<key>key</key>
+			<string>Animation</string>
+			<key>cell</key>
+			<string>PSLinkListCell</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.keytransition.prefschanged</string>
+			<key>label</key>
+			<string>Animation</string>
+			<key>validTitles</key>
+			<array>
+				<string>None</string>
+				<string>Random</string>
+				<string>Fade</string>
+				<string>Vertical Slide</string>
+				<string>Horizontal Slide</string>
+				<string>Shrink</string>
+				<string>Grow</string>
+				<string>Card Stack (Shrink &amp; Grow)</string>
+			</array>
+			<key>validValues</key>
+			<array>
+				<integer>674</integer>
+				<integer>673</integer>
+				<integer>0</integer>
+				<integer>1</integer>
+				<integer>2</integer>
+				<integer>3</integer>
+				<integer>4</integer>
+				<integer>5</integer>
+			</array>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>footerText</key>
 			<string>This hides the globe key that switches keyboards.</string>
 		</dict>
@@ -115,42 +157,52 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
+			<key>label</key>
+			<string>Active Swipe Areas</string>
+			<key>footerText</key>
+			<string>Select where on the keyboard the swipe gestures work. The keyboard is divided into three equal columns.</string>
 		</dict>
 		<dict>
-			<key>detail</key>
-			<string>PSListItemsController</string>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
 			<key>defaults</key>
 			<string>com.sassoty.keytransition</string>
-			<key>default</key>
-			<integer>0</integer>
-			<key>key</key>
-			<string>Animation</string>
-			<key>cell</key>
-			<string>PSLinkListCell</string>
 			<key>PostNotification</key>
 			<string>com.sassoty.keytransition.prefschanged</string>
+			<key>key</key>
+			<string>ActiveAreaLeft</string>
 			<key>label</key>
-			<string>Animation</string>
-			<key>validTitles</key>
-			<array>
-				<string>Random</string>
-				<string>Fade</string>
-				<string>Vertical Slide</string>
-				<string>Horizontal Slide</string>
-				<string>Shrink</string>
-				<string>Grow</string>
-				<string>Card Stack (Shrink &amp; Grow)</string>
-			</array>
-			<key>validValues</key>
-			<array>
-				<integer>673</integer>
-				<integer>0</integer>
-				<integer>1</integer>
-				<integer>2</integer>
-				<integer>3</integer>
-				<integer>4</integer>
-				<integer>5</integer>
-			</array>
+			<string>Left Column</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.sassoty.keytransition</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.keytransition.prefschanged</string>
+			<key>key</key>
+			<string>ActiveAreaMiddle</string>
+			<key>label</key>
+			<string>Middle Column</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSwitchCell</string>
+			<key>default</key>
+			<true/>
+			<key>defaults</key>
+			<string>com.sassoty.keytransition</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.keytransition.prefschanged</string>
+			<key>key</key>
+			<string>ActiveAreaRight</string>
+			<key>label</key>
+			<string>Right Column</string>
 		</dict>
 		<dict>
 			<key>cell</key>

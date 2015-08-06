@@ -15,12 +15,19 @@ enum {
 	KTAnimationGrow,
 	KTAnimationShrinkAndGrow,
 	KTAnimationCount,
-	KTAnimationRandom = 673
+	KTAnimationRandom = 673,
+	KTAnimationNone = 674
 };
 typedef NSUInteger KTAnimation;
 
 // Preference settings
-static BOOL isEnabled = YES, areDirectionsSwapped = NO, hideGlobeKey = NO, vibrateChange = NO;
+static BOOL isEnabled = YES,
+areDirectionsSwapped = NO,
+hideGlobeKey = NO,
+vibrateChange = NO,
+activeAreaLeft = YES,
+activeAreaMiddle = YES,
+activeAreaRight = YES;
 static int vibrationLength = 100;
 static KTAnimation selectedAnimation = KTAnimationFade;
 
@@ -97,6 +104,16 @@ static void reloadPrefs();
 		[swipeGesture release];
 		return;
 	}
+	// Confirm it was in the allowed region of the keyboard
+	CGFloat swipeLocationX = [swipeGesture locationInView:self].x;
+	CGFloat columnWidth = self.frame.size.width / 3;
+	if(!(activeAreaLeft && swipeLocationX <= columnWidth) &&
+		!(activeAreaMiddle && (swipeLocationX >= columnWidth && swipeLocationX <= columnWidth*2)) &&
+		!(activeAreaRight && swipeLocationX >= columnWidth*2)) {
+		log(@"Swipe outside of active areas");
+		return;
+	}
+	// Process swipe
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	int index = [inputModeController.activeInputModes indexOfObject:inputModeController.currentInputMode];
 	// Check if swiped up or down
@@ -121,6 +138,11 @@ static void reloadPrefs();
 	UIKeyboardInputModeController* inputModeController = [%c(UIKeyboardInputModeController) sharedInputModeController];
 	UIImageView* currentKeyboardView = [[UIImageView alloc] initWithImage:[self imageWithView:self]];
 	int currentAnimation = selectedAnimation;
+	// No animation
+	if(currentAnimation == KTAnimationNone) {
+		[inputModeController setCurrentInputMode:newInputMode];
+		return;
+	}
 	// Choose random
 	if(currentAnimation == KTAnimationRandom) currentAnimation = arc4random_uniform(KTAnimationCount);
 	// Choose shrink on next keyboard and grow on previous, kind of like a stack of cards
@@ -229,7 +251,6 @@ static void reloadPrefs();
 
 
 static void reloadPrefs() {
-	log(@"Loading prefs");
 	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
 	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
 	hideGlobeKey = !prefs[@"HideGlobeKey"] ? NO : [prefs[@"HideGlobeKey"] boolValue];
@@ -238,6 +259,9 @@ static void reloadPrefs() {
 	vibrationLength = !prefs[@"VibrationLength"] ? 100 : [prefs[@"VibrationLength"] floatValue];
 	if(vibrationLength < 50) vibrationLength = 50;
 	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
+	activeAreaLeft = !prefs[@"ActiveAreaLeft"] ? YES : [prefs[@"ActiveAreaLeft"] boolValue];
+	activeAreaMiddle = !prefs[@"ActiveAreaMiddle"] ? YES : [prefs[@"ActiveAreaMiddle"] boolValue];
+	activeAreaRight = !prefs[@"ActiveAreaRight"] ? YES : [prefs[@"ActiveAreaRight"] boolValue];
 }
 
 %ctor {
