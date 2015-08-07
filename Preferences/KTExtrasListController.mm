@@ -16,10 +16,18 @@
 	[UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	[UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = KTColor;
 	[UISegmentedControl appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
-	[UINavigationBar appearanceWhenContainedIn:self.class, nil].tintColor = [UIColor whiteColor];
-	[UINavigationBar appearanceWhenContainedIn:self.class, nil].barTintColor = KTColor;
 	[UISlider appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	return _specifiers;
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	self.navigationController.navigationController.navigationBar.tintColor = KTColor;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	self.navigationController.navigationController.navigationBar.tintColor = nil;
 }
 
 - (void)viewDidLoad {

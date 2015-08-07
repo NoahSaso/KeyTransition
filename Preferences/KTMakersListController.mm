@@ -22,6 +22,16 @@
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
 }
 
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	self.navigationController.navigationController.navigationBar.tintColor = KTColor;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	self.navigationController.navigationController.navigationBar.tintColor = nil;
+}
+
 - (void)showInfo {
 	UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"KeyTransition" message:@"You can tap on the icons to view the makers' various social media sites" delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 	[alert show];

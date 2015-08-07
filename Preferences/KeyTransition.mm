@@ -39,8 +39,6 @@
 	// Color stuff
 	[UISwitch appearanceWhenContainedIn:self.class, nil].tintColor = KTColor;
 	[UISwitch appearanceWhenContainedIn:self.class, nil].onTintColor = KTColor;
-	[UINavigationBar appearanceWhenContainedIn:self.class, nil].tintColor = [UIColor whiteColor];
-	[UINavigationBar appearanceWhenContainedIn:self.class, nil].barTintColor = KTColor;
 	// Title stuff
 	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[self bundle].bundlePath stringByAppendingPathComponent:@"KeyTransition"]]];
 	self.navigationItem.titleView.alpha = 0;
@@ -60,6 +58,16 @@
         [refreshControl beginRefreshing];
         [refreshControl endRefreshing];
     });
+}
+
+- (void)viewWillAppear:(BOOL)animated {
+	[super viewWillAppear:animated];
+	self.navigationController.navigationController.navigationBar.tintColor = KTColor;
+}
+
+- (void)viewWillDisappear:(BOOL)animated {
+	[super viewWillDisappear:animated];
+	self.navigationController.navigationController.navigationBar.tintColor = nil;
 }
 
 - (void)refreshOrMaybeNotIDontEvenKnowWhatThisDoesLol:(UIRefreshControl *)refreshControl {
