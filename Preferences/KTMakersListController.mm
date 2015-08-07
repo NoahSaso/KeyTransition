@@ -37,6 +37,10 @@
 	[alert show];
 }
 
+- (void)openPaypal {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://bit.ly/keytransitionpp"]];
+}
+
 @end
 
 // vim:ft=objc

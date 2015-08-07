@@ -50,6 +50,16 @@
 			<key>footerText</key>
 			<string>KeyTransition © Noah Saso &amp; Ariel Okhtenberg 2015</string>
 		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Support the Makers :D</string>
+			<key>action</key>
+			<string>openPaypal</string>
+			<key>icon</key>
+			<string>Paypal.png</string>
+		</dict>
 	</array>
 	<key>title</key>
 	<string>The Makers</string>
