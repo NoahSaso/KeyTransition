@@ -53,7 +53,7 @@
 	// Might be an easter egg, might not ;)
 	UIRefreshControl* refreshControl = [[UIRefreshControl alloc] init];
 	[refreshControl addTarget:self action:@selector(refreshOrMaybeNotIDontEvenKnowWhatThisDoesLol:) forControlEvents:UIControlEventValueChanged];
-	refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Congratulations, you found me! Keep dragging for a surprise ;)" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:14],NSForegroundColorAttributeName:[UIColor blackColor]}];
+	refreshControl.attributedTitle = [[NSAttributedString alloc] initWithString:@"Congratulations, you found me! Keep dragging for a special surprise ;)" attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:12],NSForegroundColorAttributeName:[UIColor blackColor]}];
 	[tableView addSubview:refreshControl];
 	// Hopefully fixes a weird text overlap bug
     dispatch_async(dispatch_get_main_queue(), ^{
