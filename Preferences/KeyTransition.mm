@@ -44,21 +44,12 @@
 	// Title stuff
 	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"KeyTransition" inBundle:[self bundle]]];
 	self.navigationItem.titleView.alpha = 0;
-	UIButton* twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];
-	[twitterButton setImage:[UIImage imageNamed:@"Twitter" inBundle:[self bundle]] forState:UIControlStateNormal];
-	[twitterButton addTarget:self action:@selector(tweet) forControlEvents:UIControlEventTouchUpInside];
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:twitterButton];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Twitter" inBundle:[self bundle]] style:UIBarButtonItemStylePlain target:self action:@selector(tweet)];
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 	    [UIView animateWithDuration:0.55 animations:^{
 	    	self.navigationItem.titleView.alpha = 1;
 	    }];
 	});
-}
-
-- (void)longPress:(UILongPressGestureRecognizer *)gesture {
-	if(gesture.state == UIGestureRecognizerStateEnded) {
-		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.youtube.com/watch?v=dQw4w9WgXcQ"]];
-	}
 }
 
 - (void)tweet {

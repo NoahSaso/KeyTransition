@@ -98,7 +98,6 @@ static void reloadPrefs();
 
 // Target action for swipe gesture recognizer
 %new - (void)transitionThoseKeyboards:(UISwipeGestureRecognizer *)swipeGesture {
-	reloadPrefs();
 	if(!isEnabled) {
 		[self removeGestureRecognizer:swipeGesture];
 		[swipeGesture release];
@@ -247,7 +246,7 @@ static void reloadPrefs();
 
 %end
 
-// Hide globe key
+// Hide globe/emoji key
 
 
 static void reloadPrefs() {
