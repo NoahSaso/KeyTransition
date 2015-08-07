@@ -42,9 +42,9 @@
 	[UINavigationBar appearanceWhenContainedIn:self.class, nil].tintColor = [UIColor whiteColor];
 	[UINavigationBar appearanceWhenContainedIn:self.class, nil].barTintColor = KTColor;
 	// Title stuff
-	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"KeyTransition" inBundle:[self bundle]]];
+	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[self bundle].bundlePath stringByAppendingPathComponent:@"KeyTransition"]]];
 	self.navigationItem.titleView.alpha = 0;
-	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageNamed:@"Twitter" inBundle:[self bundle]] style:UIBarButtonItemStylePlain target:self action:@selector(tweet)];
+	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithImage:[UIImage imageWithContentsOfFile:[[self bundle].bundlePath stringByAppendingPathComponent:@"Twitter"]] style:UIBarButtonItemStylePlain target:self action:@selector(tweet)];
 	dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.5 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
 	    [UIView animateWithDuration:0.55 animations:^{
 	    	self.navigationItem.titleView.alpha = 1;

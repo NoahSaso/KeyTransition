@@ -16,7 +16,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Makers" inBundle:[self bundle]]];
+	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[self bundle].bundlePath stringByAppendingPathComponent:@"Makers"]]];
 	UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
 	[infoButton addTarget:self action:@selector(showInfo) forControlEvents:UIControlEventTouchUpInside];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];

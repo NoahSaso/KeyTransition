@@ -24,7 +24,7 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Extras" inBundle:[self bundle]]];
+	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[self bundle].bundlePath stringByAppendingPathComponent:@"Extras"]]];
 }
 
 @end

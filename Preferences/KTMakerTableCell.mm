@@ -3,10 +3,12 @@
 #import "global.h"
 
 #define log(z) NSLog(@"[KeyTransition -- MakerTableCell] %@", z)
+#define KTBundle [NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]
 
 @interface KTMakerTableCell: PSTableCell {
 	NSDictionary* properties;
 }
+
 @end
 
 @implementation KTMakerTableCell
@@ -16,7 +18,7 @@
 		
 		properties = specifier.properties;
 
-		UIImage* image = [UIImage imageNamed:properties[@"twitter"] inBundle:KTBundle];
+		UIImage* image = [UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:properties[@"twitter"]]];
 		UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 		imageView.backgroundColor = [UIColor clearColor];
 		imageView.frame = CGRectMake(10, 10, 75, 75);
@@ -55,7 +57,7 @@
 
 		UIButton* twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];
 		twitterButton.frame = CGRectMake(frame.origin.x + 95, frame.origin.y + 63, 28, 28);
-		[twitterButton setImage:[UIImage imageNamed:@"Twitter" inBundle:KTBundle] forState:UIControlStateNormal];
+		[twitterButton setImage:[UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:@"Twitter"]] forState:UIControlStateNormal];
 		[twitterButton addTarget:self action:@selector(openTwitter) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
 
@@ -64,7 +66,7 @@
 		if(properties[@"website"]) {
 			UIButton* websiteButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			websiteButton.frame = CGRectMake(nextSpacing, frame.origin.y + 66.5, 22, 22);
-			[websiteButton setImage:[UIImage imageNamed:@"Website" inBundle:KTBundle] forState:UIControlStateNormal];
+			[websiteButton setImage:[UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:@"Website"]] forState:UIControlStateNormal];
 			[websiteButton addTarget:self action:@selector(openWesbite) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:websiteButton];
 
@@ -74,7 +76,7 @@
 		if(properties[@"github"]) {
 			UIButton* githubButton = [UIButton buttonWithType:UIButtonTypeCustom];
 			githubButton.frame = CGRectMake(nextSpacing, frame.origin.y + 66.5, 22, 22);
-			[githubButton setImage:[UIImage imageNamed:@"Github" inBundle:KTBundle] forState:UIControlStateNormal];
+			[githubButton setImage:[UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:@"Github"]] forState:UIControlStateNormal];
 			[githubButton addTarget:self action:@selector(openGithub) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:githubButton];
 
