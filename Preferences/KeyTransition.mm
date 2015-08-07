@@ -63,8 +63,8 @@
 }
 
 - (void)refreshOrMaybeNotIDontEvenKnowWhatThisDoesLol:(UIRefreshControl *)refreshControl {
-	[refreshControl endRefreshing];
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"https://www.youtube.com/watch?v=dQw4w9WgXcQ"]];
+	[refreshControl endRefreshing];
 }
 
 - (void)tweet {
