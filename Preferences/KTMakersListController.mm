@@ -16,10 +16,18 @@
 
 - (void)viewDidLoad {
 	[super viewDidLoad];
-	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Makers" inBundle:KTBundle]];
+	self.navigationItem.titleView = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Makers" inBundle:[self bundle]]];
 	UIButton* infoButton = [UIButton buttonWithType:UIButtonTypeInfoDark];
 	[infoButton addTarget:self action:@selector(showInfo) forControlEvents:UIControlEventTouchUpInside];
+	UILongPressGestureRecognizer* longPress = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPress:)];
+	[infoButton addGestureRecognizer:longPress];
 	self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithCustomView:infoButton];
+}
+
+- (void)longPress:(UILongPressGestureRecognizer *)gesture {
+	if(gesture.state == UIGestureRecognizerStateEnded) {
+		[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://something.com"]];
+	}
 }
 
 - (void)showInfo {
