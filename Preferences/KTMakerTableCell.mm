@@ -1,9 +1,8 @@
 #import <Preferences/Preferences.h>
-#import <Twitter/Twitter.h>
 #import "global.h"
 
 #define log(z) NSLog(@"[KeyTransition -- MakerTableCell] %@", z)
-#define KTBundle [NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]
+#define KTBundlePath @"/Library/PreferenceBundles/KeyTransition.bundle"
 
 @interface KTMakerTableCell: PSTableCell {
 	NSDictionary* properties;
@@ -18,7 +17,7 @@
 		
 		properties = specifier.properties;
 
-		UIImage* image = [UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:properties[@"twitter"]]];
+		UIImage* image = [UIImage imageWithContentsOfFile:[KTBundlePath stringByAppendingPathComponent:properties[@"twitter"]]];
 		UIImageView* imageView = [[UIImageView alloc] initWithImage:image];
 		imageView.backgroundColor = [UIColor clearColor];
 		imageView.frame = CGRectMake(10, 10, 75, 75);
@@ -53,34 +52,44 @@
 
 		// Bottom social buttons
 
-		CGFloat nextSpacing = 0;
+		CGFloat nextSpacing = frame.origin.x + 95, yLine = frame.origin.y + 63;
 
 		UIButton* twitterButton = [UIButton buttonWithType:UIButtonTypeCustom];
-		twitterButton.frame = CGRectMake(frame.origin.x + 95, frame.origin.y + 63, 28, 28);
-		[twitterButton setImage:[UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:@"Twitter"]] forState:UIControlStateNormal];
+		twitterButton.frame = CGRectMake(nextSpacing, yLine, 30, 30);
+		[twitterButton setImage:[UIImage imageWithContentsOfFile:[KTBundlePath stringByAppendingPathComponent:@"Twitter"]] forState:UIControlStateNormal];
 		[twitterButton addTarget:self action:@selector(openTwitter) forControlEvents:UIControlEventTouchUpInside];
 		[self addSubview:twitterButton];
 
-		nextSpacing += twitterButton.frame.origin.x + twitterButton.frame.size.width + 2;
+		nextSpacing += twitterButton.frame.size.width;
+
+		if(properties[@"reddit"]) {
+			UIButton* redditButton = [UIButton buttonWithType:UIButtonTypeCustom];
+			redditButton.frame = CGRectMake(nextSpacing, yLine, 30, 30);
+			[redditButton setImage:[UIImage imageWithContentsOfFile:[KTBundlePath stringByAppendingPathComponent:@"Reddit"]] forState:UIControlStateNormal];
+			[redditButton addTarget:self action:@selector(openReddit) forControlEvents:UIControlEventTouchUpInside];
+			[self addSubview:redditButton];
+
+			nextSpacing += redditButton.frame.size.width;
+		}
 
 		if(properties[@"website"]) {
 			UIButton* websiteButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			websiteButton.frame = CGRectMake(nextSpacing, frame.origin.y + 66.5, 22, 22);
-			[websiteButton setImage:[UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:@"Website"]] forState:UIControlStateNormal];
+			websiteButton.frame = CGRectMake(nextSpacing, yLine, 30, 30);
+			[websiteButton setImage:[UIImage imageWithContentsOfFile:[KTBundlePath stringByAppendingPathComponent:@"Website"]] forState:UIControlStateNormal];
 			[websiteButton addTarget:self action:@selector(openWesbite) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:websiteButton];
 
-			nextSpacing += websiteButton.frame.size.width + 4;
+			nextSpacing += websiteButton.frame.size.width;
 		}
 
 		if(properties[@"github"]) {
 			UIButton* githubButton = [UIButton buttonWithType:UIButtonTypeCustom];
-			githubButton.frame = CGRectMake(nextSpacing, frame.origin.y + 66.5, 22, 22);
-			[githubButton setImage:[UIImage imageWithContentsOfFile:[KTBundle.bundlePath stringByAppendingPathComponent:@"Github"]] forState:UIControlStateNormal];
+			githubButton.frame = CGRectMake(nextSpacing, yLine, 30, 30);
+			[githubButton setImage:[UIImage imageWithContentsOfFile:[KTBundlePath stringByAppendingPathComponent:@"Github"]] forState:UIControlStateNormal];
 			[githubButton addTarget:self action:@selector(openGithub) forControlEvents:UIControlEventTouchUpInside];
 			[self addSubview:githubButton];
 
-			nextSpacing += githubButton.frame.size.width + 4;
+			nextSpacing += githubButton.frame.size.width;
 		}
 
 	}
@@ -91,6 +100,12 @@
 	log(@"Opening twitter:");
 	log(properties[@"twitter"]);
 	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://twitter.com/%@", properties[@"twitter"]]]];
+}
+
+- (void)openReddit {
+	log(@"Opening reddit:");
+	log(properties[@"reddit"]);
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:[NSString stringWithFormat:@"http://reddit.com/u/%@", properties[@"reddit"]]]];
 }
 
 - (void)openWesbite {

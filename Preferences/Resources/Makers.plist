@@ -19,6 +19,8 @@
 			<string>http://sassoty.com</string>
 			<key>github</key>
 			<string>http://github.com/Sassoty</string>
+			<key>reddit</key>
+			<string>Sassoty</string>
 		</dict>
 		<dict>
 			<key>cell</key>
@@ -39,6 +41,8 @@
 			<string>http://aokhtenberg.github.io</string>
 			<key>github</key>
 			<string>http://github.com/AOkhtenberg</string>
+			<key>reddit</key>
+			<string>AOkhtenberg</string>
 		</dict>
 		<dict>
 			<key>cell</key>
