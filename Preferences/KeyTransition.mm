@@ -20,7 +20,7 @@
 	[super viewDidLoad];
 	// Get the banner image
 	UITableView* tableView = [self table];
-	UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Banner" inBundle:[self bundle]]];
+	UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageWithContentsOfFile:[[self bundle].bundlePath stringByAppendingPathComponent:@"Banner.png"]]];
 	// Resize header image
 	CGFloat paneWidth = [[UIScreen mainScreen] bounds].size.width;
 	if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
