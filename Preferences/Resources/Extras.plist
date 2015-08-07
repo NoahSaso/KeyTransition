@@ -8,7 +8,7 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>footerText</key>
-			<string>This hides the globe key that switches the keyboard.</string>
+			<string>This hides the globe/emoji key that switches the keyboard.</string>
 		</dict>
 		<dict>
 			<key>cell</key>
