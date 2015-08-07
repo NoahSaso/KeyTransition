@@ -248,6 +248,13 @@ static void reloadPrefs();
 
 // Hide globe/emoji key
 
+%hook UIKeyboardLayoutStar
+
+
+
+%end
+
+// Prefs
 
 static void reloadPrefs() {
 	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
