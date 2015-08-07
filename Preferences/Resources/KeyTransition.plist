@@ -7,8 +7,10 @@
 		<dict>
 			<key>cell</key>
 			<string>PSGroupCell</string>
-			<key>label</key>
-			<string>Settings</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
 			<key>footerText</key>
 			<string>No respring required.</string>
 		</dict>
@@ -74,6 +76,10 @@
 		</dict>
 		<dict>
 			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
 			<string>PSLinkCell</string>
 			<key>detail</key>
 			<string>KTExtrasListController</string>
@@ -81,6 +87,20 @@
 			<string>Extras</string>
 			<key>icon</key>
 			<string>Extras.png</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSButtonCell</string>
+			<key>label</key>
+			<string>Submit Bug Report</string>
+			<key>action</key>
+			<string>openBugReport</string>
+			<key>icon</key>
+			<string>Bug.png</string>
 		</dict>
 		<dict>
 			<key>cell</key>

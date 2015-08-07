@@ -20,7 +20,7 @@
 	[super viewDidLoad];
 	// Get the banner image
 	UITableView* tableView = [self table];
-	UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Banner" inBundle:[NSBundle bundleWithPath:@"/Library/PreferenceBundles/KeyTransition.bundle"]]];
+	UIImageView* headerImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"Banner" inBundle:[self bundle]]];
 	// Resize header image
 	CGFloat paneWidth = [[UIScreen mainScreen] bounds].size.width;
 	if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
@@ -64,6 +64,10 @@
 		UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"KeyTransition" message:@"Please make sure you have Twitter accounts signed in on your device." delegate:nil cancelButtonTitle:@"Ok" otherButtonTitles:nil];
 		[alert show];
 	}
+}
+
+- (void)openBugReport {
+	[[UIApplication sharedApplication] openURL:[NSURL URLWithString:@"http://bit.ly/AOkhtenbergBugReporter"]];
 }
 
 @end
