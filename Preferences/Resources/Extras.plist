@@ -88,6 +88,34 @@
 			<key>cell</key>
 			<string>PSGroupCell</string>
 			<key>label</key>
+			<string>Animation Length</string>
+			<key>footerText</key>
+			<string>This adds or subtracts the length (in seconds) from the default animation time of your selected animation.</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSSliderCell</string>
+			<key>cellClass</key>
+			<string>BetterPSSliderTableCell</string>
+			<key>defaults</key>
+			<string>com.sassoty.keytransition</string>
+			<key>PostNotification</key>
+			<string>com.sassoty.keytransition/preferencechanged</string>
+			<key>default</key>
+			<real>0.0</real>
+			<key>min</key>
+			<real>-2.0</real>
+			<key>max</key>
+			<real>2.0</real>
+			<key>showValue</key>
+			<true/>
+			<key>key</key>
+			<string>AnimationLength</string>
+		</dict>
+		<dict>
+			<key>cell</key>
+			<string>PSGroupCell</string>
+			<key>label</key>
 			<string>Active Swipe Areas</string>
 			<key>footerText</key>
 			<string>Select the region on the keyboard where the swipe gestures work. The keyboard is divided into three equal columns.</string>

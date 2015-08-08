@@ -29,6 +29,7 @@ activeAreaLeft = YES,
 activeAreaMiddle = YES,
 activeAreaRight = YES;
 static int vibrationLength = 100;
+static CGFloat animationLength = 0.0;
 static KTAnimation selectedAnimation = KTAnimationFade;
 
 // Interfaces
@@ -149,12 +150,12 @@ static void reloadPrefs();
 	switch(currentAnimation) {
 		case KTAnimationFade:
 			// Activate animations to hide current keyboard, swap it, then show new keyboard
-			[UIView animateWithDuration:0.35 animations:^{
+			[UIView animateWithDuration:(0.35 + animationLength) animations:^{
 				self.alpha = 0;
 			} completion:^(BOOL){
 				// Change keyboard
 				[inputModeController setCurrentInputMode:newInputMode];
-				[UIView animateWithDuration:0.35 animations:^{
+				[UIView animateWithDuration:(0.35 + animationLength) animations:^{
 					self.alpha = 1;
 				}];
 			}];
@@ -171,7 +172,7 @@ static void reloadPrefs();
 			CGRect newFrame = currentKeyboardView.frame;
 			newFrame.origin.y = (isNext ? (newFrame.size.height * 2) : -newFrame.size.height);
 			// Activate animations
-			[UIView animateWithDuration:0.75 animations:^{
+			[UIView animateWithDuration:(0.75 + animationLength) animations:^{
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
 				self.alpha = 1;
@@ -193,7 +194,7 @@ static void reloadPrefs();
 			CGRect newFrame = currentKeyboardView.frame;
 			newFrame.origin.x = (isNext ? -newFrame.size.width : newFrame.size.width);
 			// Activate animations
-			[UIView animateWithDuration:0.75 animations:^{
+			[UIView animateWithDuration:(0.75 + animationLength) animations:^{
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.alpha = 0;
 				self.alpha = 1;
@@ -211,7 +212,7 @@ static void reloadPrefs();
 			// Shrink the current keyboard
 			CGRect newFrame = CGRectMake((self.frame.size.width / 2) + 1, (self.frame.size.height / 2) + 1, 2, 2);
 			// Activate animations
-			[UIView animateWithDuration:0.75 animations:^{
+			[UIView animateWithDuration:(0.75 + animationLength) animations:^{
 				currentKeyboardView.frame = newFrame;
 			} completion:^(BOOL){
 				[currentKeyboardView removeFromSuperview];
@@ -228,7 +229,7 @@ static void reloadPrefs();
 			// Grow the current keyboard
 			CGRect newFrame = CGRectMake(0, 0, currentKeyboardView.frame.size.width * 2, currentKeyboardView.frame.size.height * 2);
 			// Activate animations
-			[UIView animateWithDuration:0.75 animations:^{
+			[UIView animateWithDuration:(0.75 + animationLength) animations:^{
 				currentKeyboardView.frame = newFrame;
 				currentKeyboardView.center = center;
 				currentKeyboardView.alpha = 0;
@@ -264,6 +265,9 @@ static void reloadPrefs() {
 	vibrateChange = !prefs[@"VibrateChange"] ? NO : [prefs[@"VibrateChange"] boolValue];
 	vibrationLength = !prefs[@"VibrationLength"] ? 100 : [prefs[@"VibrationLength"] floatValue];
 	if(vibrationLength < 50) vibrationLength = 50;
+	animationLength = !prefs[@"AnimationLength"] ? 0.0 : [prefs[@"AnimationLength"] floatValue];
+	if(animationLength < -2.0) animationLength = -2.0;
+	if(animationLength > 2.0) animationLength = 2.0;
 	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
 	activeAreaLeft = !prefs[@"ActiveAreaLeft"] ? YES : [prefs[@"ActiveAreaLeft"] boolValue];
 	activeAreaMiddle = !prefs[@"ActiveAreaMiddle"] ? YES : [prefs[@"ActiveAreaMiddle"] boolValue];
