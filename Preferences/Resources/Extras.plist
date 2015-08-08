@@ -72,7 +72,7 @@
 			<key>defaults</key>
 			<string>com.sassoty.keytransition</string>
 			<key>PostNotification</key>
-			<string>com.sassoty.keytransition/preferencechanged</string>
+			<string>com.sassoty.keytransition.prefschanged</string>
 			<key>default</key>
 			<integer>100</integer>
 			<key>min</key>
@@ -100,7 +100,7 @@
 			<key>defaults</key>
 			<string>com.sassoty.keytransition</string>
 			<key>PostNotification</key>
-			<string>com.sassoty.keytransition/preferencechanged</string>
+			<string>com.sassoty.keytransition.prefschanged</string>
 			<key>default</key>
 			<real>0.0</real>
 			<key>min</key>
