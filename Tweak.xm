@@ -3,6 +3,18 @@
 #import <AudioToolbox/AudioServices.h>
 #include <stdlib.h>
 
+// Check if system app in prefs
+@interface SBApplication : NSObject
+- (BOOL)isSystemApplication;
+@end
+
+@interface SBApplicationController : NSObject
++ (id)sharedInstance;
+- (SBApplication *)applicationWithDisplayIdentifier:(NSString *)identifier;
+// iOS 8
+- (SBApplication *)applicationWithBundleIdentifier:(NSString *)identifier;
+@end
+
 // Vibrate method
 extern "C" void AudioServicesPlaySystemSoundWithVibration(SystemSoundID inSystemSoundID, id arg, NSDictionary* vibratePattern);
 
@@ -258,16 +270,31 @@ static void reloadPrefs();
 // Prefs
 
 static void reloadPrefs() {
-	NSDictionary* prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
+	// Well basically the whole CFPreferences system is really messed up in the sense that it was never supposed to be used inside of a sandboxed application (any appstore app).
+	// Therefore, it is quite troublesome to achieve accessing preferences from my settings using the CFPreferences "correct" method.
+	// What this means is that you have to take the time out of your day to kill your app. I know; 5 seconds /IS/ a long time. Live with it.
+	BOOL isSystem = [NSHomeDirectory() isEqualToString:@"/var/mobile"];
+	// Retrieve preferences
+	NSDictionary* prefs = nil;
+	if(isSystem) {
+		CFArrayRef keyList = CFPreferencesCopyKeyList(CFSTR("com.sassoty.keytransition"), kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+		if(keyList) {
+			prefs = (NSDictionary *)CFPreferencesCopyMultiple(keyList, CFSTR("com.sassoty.keytransition"), kCFPreferencesCurrentUser, kCFPreferencesAnyHost);
+			if(!prefs) prefs = [NSDictionary new];
+			CFRelease(keyList);
+		}
+	}else {
+		prefs = [NSDictionary dictionaryWithContentsOfFile:@"/User/Library/Preferences/com.sassoty.keytransition.plist"];
+	}
 	isEnabled = !prefs[@"Enabled"] ? YES : [prefs[@"Enabled"] boolValue];
 	hideGlobeKey = !prefs[@"HideGlobeKey"] ? NO : [prefs[@"HideGlobeKey"] boolValue];
 	areDirectionsSwapped = !prefs[@"SwappedDirections"] ? NO : [prefs[@"SwappedDirections"] boolValue];
 	vibrateChange = !prefs[@"VibrateChange"] ? NO : [prefs[@"VibrateChange"] boolValue];
-	vibrationLength = !prefs[@"VibrationLength"] ? 100 : [prefs[@"VibrationLength"] floatValue];
-	if(vibrationLength < 50) vibrationLength = 50;
-	animationLength = !prefs[@"AnimationLength"] ? 0.0 : [prefs[@"AnimationLength"] floatValue];
-	if(animationLength < -2.0) animationLength = -2.0;
-	if(animationLength > 2.0) animationLength = 2.0;
+	vibrationLength = !prefs[@"VibrationLength"] ? 100.f : [prefs[@"VibrationLength"] floatValue];
+	if(vibrationLength < 50.f) vibrationLength = 50.f;
+	animationLength = !prefs[@"AnimationLength"] ? 0.f : [prefs[@"AnimationLength"] floatValue];
+	if(animationLength < -2.f) animationLength = -2.f;
+	if(animationLength > 2.f) animationLength = 2.f;
 	selectedAnimation = !prefs[@"Animation"] ? KTAnimationFade : [prefs[@"Animation"] intValue];
 	activeAreaLeft = !prefs[@"ActiveAreaLeft"] ? YES : [prefs[@"ActiveAreaLeft"] boolValue];
 	activeAreaMiddle = !prefs[@"ActiveAreaMiddle"] ? YES : [prefs[@"ActiveAreaMiddle"] boolValue];
