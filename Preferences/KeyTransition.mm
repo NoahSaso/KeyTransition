@@ -62,12 +62,18 @@
 
 - (void)viewWillAppear:(BOOL)animated {
 	[super viewWillAppear:animated];
-	self.navigationController.navigationController.navigationBar.tintColor = KTColor;
+	if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		self.navigationController.navigationBar.tintColor = KTColor;
+	else
+		self.navigationController.navigationController.navigationBar.tintColor = KTColor;
 }
 
 - (void)viewWillDisappear:(BOOL)animated {
-	[super viewWillDisappear:animated];
-	self.navigationController.navigationController.navigationBar.tintColor = nil;
+	[super viewWillAppear:animated];
+	if(UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad)
+		self.navigationController.navigationBar.tintColor = nil;
+	else
+		self.navigationController.navigationController.navigationBar.tintColor = nil;
 }
 
 - (void)refreshOrMaybeNotIDontEvenKnowWhatThisDoesLol:(UIRefreshControl *)refreshControl {
